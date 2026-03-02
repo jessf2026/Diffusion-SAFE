@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Diffusion-SAFE: Diffusion-Native Human-to-Robot Driving Handover for Shared Autonomy">
+  <meta name="keywords" content="Diffusion, Shared Autonomy, Driving, Handover, Safety">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diffusion-SAFE: Diffusion-Native Human-to-Robot Driving Handover for Shared Autonomy</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <!-- <link rel="icon" href="./static/images/stanford.png"> -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <!-- MathJax (single instance) -->
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+  </script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="#">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+
+<!-- Title + Authors + Links -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title">Diffusion-SAFE: Diffusion-Native Human-to-Robot Driving Handover for Shared Autonomy</h1>
+
+          <!-- Authors (blind review) -->
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">Authors omitted for review</span>
+          </div>
+          <!-- TODO: Replace with real authors + affiliations after review -->
+
+          <!-- Paper links -->
+          <div class="column has-text-centered" style="margin-top: 1rem;">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="#" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="#" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="ai ai-arxiv"></i></span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="#" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code</span>
+                </a>
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Splash / Teaser -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-multiline">
+      <div class="column is-half has-text-centered">
+        <img id="teaser-image" src="./static/images/splash_screenshot.png" alt="splash figure" width="100%">
+      </div>
+      <div class="column is-half has-text-centered">
+        <video id="diffuse-video" autoplay muted loop playsinline height="100%">
+          <source src="./static/videos/diffuse.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+    <p>
+      Closed-loop framework with two diffusion model-based policies: an
+      evaluator to predict human intent, and a copilot to provide optimal trajectories and ensure smooth control transitions during safety-critical situations.
+    </p>
+  </div>
+</section>
+
+
+<!-- Abstract -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-4">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Shared autonomy in driving requires anticipating human behavior, flagging risk before it becomes unavoidable, and transferring control safely and smoothly.
+          </p>
+          <p>
+            We propose <b>Diffusion-SAFE</b>, a closed-loop framework built on two diffusion models: an <em>evaluator</em> that predicts multimodal human-intent action sequences for probabilistic risk detection, and a <em>safety-guided copilot</em> that steers its denoising process toward safe regions using the gradient of a map-based safety certificate. When risk is detected, control is transferred through <em>partial diffusion</em>: the human plan is forward-noised to an intermediate level and denoised by the safety-guided copilot. The forward-diffusion ratio \( \rho \) acts as a continuous takeover knob—small \( \rho \) keeps the output close to human intent, while increasing \( \rho \) shifts authority toward the copilot, avoiding the mixed-unsafe pitfall of action-level blending.
+          </p>
+          <p>
+            Unlike methods relying on hand-crafted score functions, our diffusion formulation supports both safety evaluation and plan generation directly from demonstrations. We evaluate <b>Diffusion-SAFE</b> in simulation and on a real ROS-based race car, achieving a <b>98.5%</b> handover success rate while maintaining smooth transitions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Framework Figure -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="has-text-centered">
+      <img id="framework-image" src="./static/images/framework.png" alt="Framework Image" width="100%">
+      <p>
+        <b>Diffusion-SAFE</b> architecture: The evaluator model processes observations and action sequences, sampling future action
+        sequences aligned with human intent in a simulated environment. The copilot model generates and executes expert action sequences when the human
+        performance score falls below a predefined threshold \( \tau_{NLL} \).
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- Model Architecture -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="column is-full-width">
+      <h2 class="title is-4">Model Architecture</h2>
+      <div class="content has-text-justified">
+        <p>
+          <b>Noise Estimator Architecture:</b> U-Net design with residual connections,
+          positional embedding of step \( t \), and conditioning vector
+          \( \mathbf{C}_{0:t_{\text{obs}}} \). Double convolution block (DC in the figure).
+        </p>
+      </div>
+      <div class="has-text-centered">
+        <video id="unet-video" autoplay muted loop playsinline width="100%">
+          <source src="./static/videos/unet_video.mp4" type="video/mp4">
+        </video>
+      </div>
+
+      <!-- Algorithm 1: Pseudo Code -->
+      <div style="margin-top: 2rem;">
+        <div class="has-text-centered">
+          <img id="pseudo-code-image" src="./static/images/pseudo_code.png" alt="Algorithm 1: Safety-Guided Copilot Reverse Process" style="max-width: 50%;">
+          <p><b>Algorithm 1:</b> Safety-Guided Copilot Reverse Process</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Safety-Guided Copilot -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="column is-full-width">
+      <h2 class="title is-4">Safety-Guided Copilot</h2>
+      <div class="content has-text-justified">
+        <p>
+          The core of Diffusion-SAFE is a <b>safety-guided copilot</b>: a conditional diffusion model trained on expert driving demonstrations whose reverse (denoising) process is steered at every step by a map-based safety certificate.
+        </p>
+        <p>
+          The safety certificate is built from a <b>Signed Distance Field (SDF)</b> computed on the track map. The top row below shows overhead camera images of the real-world tracks; the bottom row shows the corresponding SDF grids, where the green boundary marks the track edge and the field value at any point gives the signed distance to the nearest boundary.
+        </p>
+      </div>
+
+      <div class="content has-text-justified">
+        <p>
+          At each denoising step \( k \), the copilot:
+        </p>
+        <ol>
+          <li>Predicts the noise with the learned U-Net \( \epsilon_\theta \) and obtains a tweedie estimate of the clean action plan;</li>
+          <li>Rolls out the predicted trajectory through a <em>differentiable bicycle dynamics model</em> to obtain future vehicle states;</li>
+          <li>Evaluates a <em>safety cost</em> by querying the SDF grid via bilinear interpolation to obtain a differentiable safety cost;</li>
+          <li>Back-propagates the safety-cost gradient \( \nabla_{\mathbf{a}} J_{\text{safe}} \) and shifts the DDPM posterior mean away from unsafe regions, with guidance scale \( \gamma_c \).</li>
+        </ol>
+        <p>
+          Because guidance is applied inside the reverse process rather than as a post-hoc filter, the copilot produces trajectories that are <em>jointly</em> high-likelihood under the expert distribution <em>and</em> safe with respect to the map.
+        </p>
+      </div>
+
+      <div style="margin-bottom: 10px;"></div>
+
+      <div class="columns is-multiline">
+        <div class="column is-half has-text-centered">
+          <img id="safety-map-image" src="./static/images/maps.png" alt="Safety Map Construction" width="100%">
+          <p><b>Safety map construction:</b> Real-world track images (top) and their SDF representations (bottom)</p>
+        </div>
+        <div class="column is-half has-text-centered">
+          <img id="safety-guidance-effect" src="./static/images/5a_00.png" alt="Safety guidance effect on unsafe rate" style="max-width: 75%;">
+          <p><b>Effect of safety guidance:</b> Unsafe rate (%) vs. forward diffusion ratio \( \rho \). The shaded region highlights the reduction achieved by safety guidance.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Simulation Demos -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="column is-full-width">
+      <h2 class="title is-4">Simulation Demos</h2>
+      <p>
+        Here we showcase four different simulated scenes randomly generated in Gym CarRacing-v2.
+      </p>
+
+      <div style="margin-bottom: 20px;"></div>
+
+      <div class="columns is-multiline">
+        <div class="column is-half has-text-centered">
+          <video id="sim-scene1" autoplay controls muted loop playsinline width="100%">
+            <source src="./static/videos/scene1.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column is-half has-text-centered">
+          <video id="sim-scene2" autoplay controls muted loop playsinline width="100%">
+            <source src="./static/videos/scene2.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column is-half has-text-centered">
+          <video id="sim-scene3" autoplay controls muted loop playsinline width="100%">
+            <source src="./static/videos/scene3.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column is-half has-text-centered">
+          <video id="sim-scene4" autoplay controls muted loop playsinline width="100%">
+            <source src="./static/videos/scene4.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Partial Diffusion as Handover Process -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="column is-full-width">
+      <h2 class="title is-4">Partial Diffusion as Handover Process</h2>
+      <p>
+        By changing \( \rho \), we can adjust the balance between preserving human input and following the safe behavior of the copilot:
+        when \( \rho \) is small, human intent is well preserved, and thus with limited alignment to \( P_{\text{copilot}} \);
+        in contrast, larger values \( \rho \) would lead the system to prioritize aligning with the copilot policy over human input.
+      </p>
+      <div style="margin-bottom: 10px;"></div>
+      <p>
+        Comparison of Our Partial Diffusion Method and Simple Blending in the Handover Process:
+      </p>
+
+      <div style="margin-bottom: 20px;"></div>
+
+      <div class="columns is-multiline">
+        <div class="column is-half has-text-centered">
+          <video id="handover-ours" autoplay controls muted loop playsinline width="100%">
+            <source src="./static/videos/our_handover.mp4" type="video/mp4">
+          </video>
+          <p>
+            <b>Our approach (via forward diffusion ratio</b> \( \rho \) <b>)</b>
+          </p>
+        </div>
+        <div class="column is-half has-text-centered">
+          <video id="handover-blend" autoplay controls muted loop playsinline width="100%">
+            <source src="./static/videos/simple_blend.mp4" type="video/mp4">
+          </video>
+          <p>
+            <b>Simply blend:</b>
+            &nbsp;
+            \( \mathbf{a}_{blend} = k \mathbf{a}_{H} + (1 - k) \mathbf{a}_{copilot} \)
+          </p>
+        </div>
+      </div>
+
+      <!-- Fig. 4: Effect of ρ on trajectory + ADE tradeoff -->
+      <div style="margin-bottom: 20px;"></div>
+
+      <div class="columns is-multiline">
+        <div class="column is-half has-text-centered">
+          <img id="rho-trajectory" src="./static/images/4a.png" alt="Effect of rho on trajectory" width="100%">
+          <p><b>(a)</b> The human plan (\( \rho = 0 \)) collides with an obstacle; increasing \( \rho \) steers the trajectory toward the safe copilot plan (\( \rho = 1 \)).</p>
+        </div>
+        <div class="column is-half has-text-centered">
+          <img id="rho-ade-tradeoff" src="./static/images/4b.png" alt="ADE tradeoff vs rho" style="max-width: 85%;">
+          <p><b>(b)</b> ADE to the human plan (blue) increases with \( \rho \) while ADE to the copilot plan (red) decreases, confirming smooth interpolation between the two endpoints.</p>
+        </div>
+      </div>
+
+      <!-- Explanation text -->
+      <div style="margin-bottom: 10px;"></div>
+      <p>
+        The figures above show that partial diffusion smoothly interpolates between the human plan and the copilot plan in trajectory space. However, smoothness alone does not guarantee safety. Below we compare our method against simple action-level blending: because the safe-action set is often nonconvex, linearly mixing two individually safe actions can produce an unsafe outcome, whereas our partial diffusion approach remains safe throughout the handover.
+      </p>
+
+      <!-- Fig. 9 + Fig. 10: Blending comparison + Action-level smoothness -->
+      <div style="margin-bottom: 20px;"></div>
+
+      <div class="columns is-multiline">
+        <div class="column is-half has-text-centered">
+          <img id="compare-blending" src="./static/images/compare_blending.png" alt="Comparison of simple blending and our partial diffusion" width="100%">
+          <p><b>Comparison of simple blending and our partial diffusion method.</b> Simple blending produces unsafe trajectories, while our method remains safe throughout the handover.</p>
+        </div>
+        <div class="column is-half has-text-centered">
+          <img id="action-smoothness" src="./static/images/action_curves.png" alt="Action-level smoothness during handover" width="100%">
+          <p><b>Action-level smoothness during handover.</b> Our diffusion-native handover (blue) yields smooth transitions, while simple action blending (orange) exhibits erratic oscillations.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<!-- Ablations -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="column is-full-width">
+      <h2 class="title is-4">Ablations</h2>
+      <p>
+        Ablation studies are conducted for both the evaluator and the copilot.
+        The horizon unit is measured in steps, where each step corresponds to 0.1s. \( \textbf{Bold} \) indicates the best result, while \( \textit{Italic} \) indicates the second-best result.
+      </p>
+
+      <div style="margin-bottom: 20px;"></div>
+
+      <div class="columns is-multiline">
+        <div class="column is-half has-text-centered">
+          <img id="evaluator-ablation-image" src="./static/images/evaluator_ablation.png" alt="Evaluator ablation" width="100%">
+          <p><b>Ablation table for the evaluator model</b></p>
+        </div>
+        <div class="column is-half has-text-centered">
+          <img id="copilot-ablation-image" src="./static/images/copilot_ablation.png" alt="Copilot ablation" width="100%">
+          <p><b>Ablation table for the copilot model</b></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Handover Comparison Table -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="column is-full-width">
+      <h2 class="title is-4">Handover Comparison</h2>
+      <div class="has-text-centered">
+        <img id="handover-table-image" src="./static/images/handover_table.png" alt="Handover comparison in simulation and real world" style="max-width: 60%;">
+        <p><b>Table III:</b> Handover comparison in simulation and real world</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Comparison with Baselines -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="column is-full-width">
+      <h2 class="title is-4">Comparison with Baselines</h2>
+      <p>
+        In this work, we utilize the ability of the diffusion policy to inherently express multimodal distributions.
+        Our method is compared to the following multimodal methods: <a
+        href="https://robomimic.github.io">LSTM-GMM</a> and <a
+        href="https://mahis.life/bet">Behavior Transformers models (BET)</a>.
+        The results are summarized in the following tables.
+        The horizon unit is measured in steps, where each step corresponds to 0.1s. \( \textbf{Bold} \) indicates the best result, while \( \textit{Italic} \) indicates the second-best result.
+      </p>
+
+      <div style="margin-bottom: 20px;"></div>
+
+      <div class="columns is-multiline">
+        <div class="column is-half has-text-centered">
+          <img id="evaluator-comparison-image" src="./static/images/evaluator_comparison.png" alt="Evaluator comparison" width="100%">
+          <p><b>Baseline Comparison table for the evaluator model</b></p>
+        </div>
+        <div class="column is-half has-text-centered">
+          <img id="copilot-comparison-image" src="./static/images/copilot_comparison.png" alt="Copilot comparison" width="100%">
+          <p><b>Baseline Comparison table for the copilot model</b></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Real-world Experiment Setup -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="column is-full-width">
+      <h2 class="title is-4">Real-world Experiment Setup and Dataset Collection Pipeline</h2>
+      <p>
+        We evaluate our framework on a ROS-controlled race car with onboard compute (Jetson Orin Nano), tracked by a 13-camera OptiTrack system (see figure below). At each time step \( t \), the motion-capture pipeline provides the vehicle pose on the ground plane, \( \mathbf{p}^{\mathrm{world}}_t=(x_t,y_t,\theta_t) \), streamed to ROS via VRPN. A <code>cropper</code> node projects \( \mathbf{p}^{\mathrm{world}}_t \) to pixel coordinates and extracts an ego-centric image observation \( I_t \) from the overhead camera, while a <code>vel</code> node computes finite-difference velocities \( \mathbf{v}_t \). A <code>sync</code> node time-aligns all streams to produce the training tuple \( (I_t,\,\mathbf{a}_t,\,\mathbf{v}_t,\,\mathbf{p}_t) \).
+      </p>
+
+      <div style="margin-bottom: 20px;"></div>
+
+      <div class="has-text-centered">
+        <img id="mocap-setup-image" src="./static/images/mocap_00.png" alt="Motion Capture Visualization" width="80%">
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Real-world Demo -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="column is-full-width">
+      <h2 class="title is-4">Real-world Demo</h2>
+      <p>
+        Real-World Experiment Results: Columns represent unseen maps. Rows represent different initial conditions ('start' points), human-driver temporal strategies, and correlated handovers.
+      </p>
+      <div style="margin-bottom: 15px;"></div>
+      <div class="has-text-centered">
+        <img id="real-demo-image" src="./static/images/real_demo01.png" alt="Real-world Demo" width="100%">
+      </div>
+
+      <div style="margin-bottom: 20px;"></div>
+
+      <p>
+        Here are four real-world demos showing smooth and successful handovers on various unseen tracks.
+      </p>
+
+      <div style="margin-bottom: 20px;"></div>
+
+      <div class="columns is-multiline">
+        <div class="column is-half has-text-centered">
+          <video id="real-track1" autoplay controls muted loop playsinline width="100%">
+            <source src="./static/videos/track1.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column is-half has-text-centered">
+          <video id="real-track2" autoplay controls muted loop playsinline width="100%">
+            <source src="./static/videos/track2.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column is-half has-text-centered">
+          <video id="real-track3" autoplay controls muted loop playsinline width="100%">
+            <source src="./static/videos/track3.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column is-half has-text-centered">
+          <video id="real-track4" autoplay controls muted loop playsinline width="100%">
+            <source src="./static/videos/track4.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            We appreciate <a href="https://nerfies.github.io">Nerfies</a> for providing
+            the template for this website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
